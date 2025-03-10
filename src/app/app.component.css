@@ -1,0 +1,11 @@
+.adsense-sidebar {
+  width: 100px;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+}
+
+.content-container {
+  flex-grow: 1;
+  padding-left: 20px;
+}
