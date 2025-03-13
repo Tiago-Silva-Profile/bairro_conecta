@@ -2,12 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AdsenseComponent } from "../../shared/adsense/adsense.component";
+import { PartnersComponent } from "../../shared/partners/partners.component";
 
 @Component({
   selector: 'app-home',
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    PartnersComponent
 ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
