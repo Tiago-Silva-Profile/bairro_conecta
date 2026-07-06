@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profissionais — Aqui no Bairro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-plaster:#EDE6DA;
+    --ink:#23322E;
+    --ink-soft:#5B6560;
+    --azulejo:#1F6F8B;
+    --azulejo-deep:#154D63;
+    --mango:#E4A23A;
+    --telha:#A6432B;
+    --verde:#4B7F52;
+    --card:#FBF8F2;
+    --line: rgba(35,50,46,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg-plaster);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    line-height:1.5;
+  }
+  h1,h2{font-family:'Fraunces', serif;font-weight:600;margin:0;letter-spacing:-0.01em;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;font-size:0.72rem;letter-spacing:0.14em;
+    text-transform:uppercase;color:var(--azulejo-deep);font-weight:500;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  header{padding:22px 0;border-bottom:1px solid var(--line);}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;}
+  .logo-mark{font-family:'Fraunces', serif;font-weight:700;font-size:1.25rem;}
+  .back-link{font-size:0.85rem;color:var(--azulejo-deep);text-decoration:none;font-weight:600;}
+
+  .top{padding:52px 0 30px;}
+  .top h1{font-size:clamp(1.8rem,3.4vw,2.4rem);margin-top:10px;}
+  .top p{color:var(--ink-soft);margin-top:12px;max-width:56ch;}
+
+  .filters{display:flex;flex-wrap:wrap;gap:9px;margin:28px 0 8px;}
+  .filter-chip{
+    font-family:'IBM Plex Mono';font-size:0.76rem;letter-spacing:0.02em;
+    background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:100px;
+    cursor:pointer;color:var(--ink);
+  }
+  .filter-chip.active{background:var(--azulejo-deep);color:#fff;border-color:var(--azulejo-deep);}
+
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    gap:18px;padding:30px 0 70px;
+  }
+  .prof-card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:22px;display:flex;flex-direction:column;gap:10px;
+  }
+  .prof-card .cat-tag{
+    font-family:'IBM Plex Mono';font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;
+    color:var(--telha);
+  }
+  .prof-card h3{font-size:1.2rem;}
+  .prof-card .bairro{font-size:0.86rem;color:var(--ink-soft);}
+  .prof-card .bairro::before{content:"📍 ";}
+  .prof-card p.detalhe{font-size:0.9rem;color:var(--ink-soft);flex-grow:1;}
+  .prof-card .wpp-btn{
+    margin-top:6px;font-family:'Inter';font-weight:600;font-size:0.86rem;
+    background:var(--verde);color:#fff;border:none;padding:10px 14px;border-radius:8px;
+    text-align:center;text-decoration:none;cursor:pointer;
+  }
+  .prof-card .wpp-btn:hover{filter:brightness(1.05);}
+
+  .empty, .loading, .error{
+    padding:60px 20px;text-align:center;color:var(--ink-soft);
+    background:var(--card);border:1px dashed var(--line);border-radius:14px;
+  }
+  .error{color:var(--telha);border-color:var(--telha);}
+
+  footer{padding:30px 0 50px;text-align:center;}
+  footer p{font-size:0.82rem;color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <span class="logo-mark">Aqui no Bairro</span>
+    <a class="back-link" href="index.html">← Voltar pro início</a>
+  </div>
+</header>
+
+<section class="top">
+  <div class="wrap">
+    <p class="eyebrow">Profissionais cadastrados · Igarassu, PE</p>
+    <h1>Quem já tá pronto pra atender no seu bairro.</h1>
+    <p>Lista atualizada direto da planilha de cadastros. Toque em "Chamar no WhatsApp" pra falar direto com o profissional.</p>
+
+    <div class="filters" id="filters">
+      <span class="filter-chip active" data-cat="todas">Todas</span>
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div id="content" class="loading">Carregando profissionais...</div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>Aqui no Bairro — teste piloto em Igarassu/PE.</p>
+  </div>
+</footer>
+
+<script>
+  // ====== CONFIGURAÇÃO ======
+  // Use a MESMA URL do Apps Script configurada no index.html
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwCrWniqjCOZyHqjPhe2c_ZJKtMGwTKWeT2Gh6f6Jv_5MwFu7c1npD_WrbqhkUHVHzXkQ/exec";
+  // ==========================
+
+  let allProfissionais = [];
+  let activeCategoria = 'todas';
+
+  function onlyDigits(str){
+    return (str || '').replace(/\D/g, '');
+  }
+
+  function whatsappLink(numero){
+    let digits = onlyDigits(numero);
+    if(digits.length <= 11) digits = '55' + digits; // assume Brasil se não tiver DDI
+    return 'https://wa.me/' + digits;
+  }
+
+  function renderChips(categorias){
+    const filtersEl = document.getElementById('filters');
+    filtersEl.innerHTML = '<span class="filter-chip active" data-cat="todas">Todas</span>' +
+      categorias.map(c => `<span class="filter-chip" data-cat="${c}">${c}</span>`).join('');
+
+    filtersEl.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        activeCategoria = chip.dataset.cat;
+        filtersEl.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        renderCards();
+      });
+    });
+  }
+
+  function renderCards(){
+    const contentEl = document.getElementById('content');
+    const filtrados = activeCategoria === 'todas'
+      ? allProfissionais
+      : allProfissionais.filter(p => p.categoria === activeCategoria);
+
+    if(filtrados.length === 0){
+      contentEl.className = 'empty';
+      contentEl.innerHTML = 'Ainda não tem profissional cadastrado nessa categoria.';
+      return;
+    }
+
+    contentEl.className = 'grid';
+    contentEl.innerHTML = filtrados.map(p => `
+      <div class="prof-card">
+        <span class="cat-tag">${p.categoria || 'Serviço'}</span>
+        <h3>${escapeHtml(p.nome)}</h3>
+        <span class="bairro">${escapeHtml(p.bairro)}</span>
+        ${p.detalhe ? `<p class="detalhe">${escapeHtml(p.detalhe)}</p>` : ''}
+        <a class="wpp-btn" target="_blank" href="${whatsappLink(p.whatsapp)}">Chamar no WhatsApp</a>
+      </div>
+    `).join('');
+  }
+
+  function escapeHtml(str){
+    if(!str) return '';
+    return str.replace(/[&<>"']/g, m => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[m]));
+  }
+
+  async function loadProfissionais(){
+    const contentEl = document.getElementById('content');
+
+    if(APPS_SCRIPT_URL.includes('COLE_AQUI')){
+      contentEl.className = 'error';
+      contentEl.innerHTML = 'Ainda falta colar a URL do Apps Script no topo deste arquivo (profissionais.html).';
+      return;
+    }
+
+    try{
+      const res = await fetch(APPS_SCRIPT_URL + '?tipo=profissional');
+      const data = await res.json();
+      allProfissionais = data.profissionais || [];
+
+      if(allProfissionais.length === 0){
+        contentEl.className = 'empty';
+        contentEl.innerHTML = 'Ainda não tem profissional cadastrado. Assim que alguém se cadastrar, aparece aqui.';
+        return;
+      }
+
+      const categorias = [...new Set(allProfissionais.map(p => p.categoria).filter(Boolean))];
+      renderChips(categorias);
+      renderCards();
+    }catch(err){
+      contentEl.className = 'error';
+      contentEl.innerHTML = 'Não conseguimos carregar os profissionais agora. Tenta recarregar a página em instantes.';
+    }
+  }
+
+  loadProfissionais();
+</script>
+
+</body>
+</html>
