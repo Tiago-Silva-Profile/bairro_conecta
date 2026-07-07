@@ -325,6 +325,11 @@
           <textarea id="detalhe" name="detalhe" rows="3" placeholder="Ex: eletricista há 8 anos, atendo instalação e manutenção residencial"></textarea>
         </div>
 
+        <div class="field" id="foto-field">
+          <label for="foto">Foto de perfil (opcional)</label>
+          <input type="url" id="foto" name="foto" placeholder="Cole um link de foto sua (Google Drive, Instagram, etc.)">
+        </div>
+
         <div class="submit-row">
           <button type="submit" class="btn btn-submit" id="submit-btn">Enviar cadastro</button>
           <span class="form-note">Seus dados só são usados pra te conectar dentro do teste do Aqui no Bairro.</span>
@@ -367,6 +372,7 @@
       title.textContent = 'Quero atender pelo bairro';
       lede.textContent = 'Preencha seus dados — é o primeiro passo pra aparecer pra quem procura seu serviço em Igarassu.';
       catField.style.display = 'grid';
+      document.getElementById('foto-field').style.display = 'grid';
       detalheLabel.textContent = 'Conte um pouco sobre o serviço que você faz';
       detalhe.placeholder = 'Ex: eletricista há 8 anos, atendo instalação e manutenção residencial';
       submitBtn.textContent = 'Enviar cadastro';
@@ -375,6 +381,7 @@
       title.textContent = 'Preciso de alguém pra resolver isso';
       lede.textContent = 'Deixe seu pedido — assim que tivermos alguém que atenda, chamamos você no WhatsApp.';
       catField.style.display = 'grid';
+      document.getElementById('foto-field').style.display = 'none';
       detalheLabel.textContent = 'O que você precisa?';
       detalhe.placeholder = 'Ex: preciso de um eletricista pra trocar o quadro de energia';
       submitBtn.textContent = 'Enviar pedido';
@@ -397,6 +404,7 @@
       categoria: document.getElementById('categoria').value,
       bairro: document.getElementById('bairro').value.trim(),
       detalhe: document.getElementById('detalhe').value.trim(),
+      foto: document.getElementById('foto').value.trim(),
       data: new Date().toISOString()
     };
 
