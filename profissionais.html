@@ -137,7 +137,7 @@
   let activeCategoria = 'todas';
 
   function onlyDigits(str){
-    return (str || '').replace(/\D/g, '');
+    return String(str == null ? '' : str).replace(/\D/g, '');
   }
 
   function whatsappLink(numero){
@@ -163,7 +163,9 @@
 
   function iniciais(nome){
     if(!nome) return '?';
-    var partes = nome.trim().split(/\s+/);
+    var texto = String(nome).trim();
+    if(!texto) return '?';
+    var partes = texto.split(/\s+/);
     var letras = partes[0][0] + (partes.length > 1 ? partes[partes.length - 1][0] : '');
     return letras.toUpperCase();
   }
@@ -211,8 +213,8 @@
   }
 
   function escapeHtml(str){
-    if(!str) return '';
-    return str.replace(/[&<>"']/g, m => ({
+    if(str === null || str === undefined || str === '') return '';
+    return String(str).replace(/[&<>"']/g, m => ({
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[m]));
   }
@@ -241,6 +243,7 @@
       renderChips(categorias);
       renderCards();
     }catch(err){
+      console.error('Aqui no Bairro — erro ao carregar profissionais:', err);
       contentEl.className = 'error';
       contentEl.innerHTML = 'Não conseguimos carregar os profissionais agora. Tenta recarregar a página em instantes.';
     }
