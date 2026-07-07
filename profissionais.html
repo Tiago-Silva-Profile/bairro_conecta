@@ -58,13 +58,26 @@
     background:var(--card);border:1px solid var(--line);border-radius:14px;
     padding:22px;display:flex;flex-direction:column;gap:10px;
   }
+  .prof-card .card-top{display:flex;align-items:center;gap:14px;}
+  .prof-card .avatar{
+    width:56px;height:56px;border-radius:50%;object-fit:cover;flex-shrink:0;
+    background:var(--azulejo-deep);
+  }
+  .prof-card .avatar-fallback{
+    width:56px;height:56px;border-radius:50%;flex-shrink:0;
+    background:var(--azulejo-deep);color:#fff;display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces';font-weight:600;font-size:1.15rem;
+  }
+  .prof-card .card-top-text{display:flex;flex-direction:column;gap:3px;}
   .prof-card .cat-tag{
     font-family:'IBM Plex Mono';font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;
     color:var(--telha);
   }
-  .prof-card h3{font-size:1.2rem;}
+  .prof-card h3{font-size:1.15rem;}
   .prof-card .bairro{font-size:0.86rem;color:var(--ink-soft);}
   .prof-card .bairro::before{content:"📍 ";}
+  .prof-card .stars{font-size:0.9rem;color:var(--mango);letter-spacing:1px;}
+  .prof-card .no-rating{font-size:0.8rem;color:var(--ink-soft);font-style:italic;}
   .prof-card p.detalhe{font-size:0.9rem;color:var(--ink-soft);flex-grow:1;}
   .prof-card .wpp-btn{
     margin-top:6px;font-family:'Inter';font-weight:600;font-size:0.86rem;
@@ -148,6 +161,22 @@
     });
   }
 
+  function iniciais(nome){
+    if(!nome) return '?';
+    var partes = nome.trim().split(/\s+/);
+    var letras = partes[0][0] + (partes.length > 1 ? partes[partes.length - 1][0] : '');
+    return letras.toUpperCase();
+  }
+
+  function starsHtml(avaliacao){
+    var nota = parseFloat(avaliacao);
+    if(!nota || nota <= 0){
+      return '<span class="no-rating">Ainda sem avaliações</span>';
+    }
+    nota = Math.max(1, Math.min(5, Math.round(nota)));
+    return '<span class="stars">' + '★'.repeat(nota) + '☆'.repeat(5 - nota) + '</span>';
+  }
+
   function renderCards(){
     const contentEl = document.getElementById('content');
     const filtrados = activeCategoria === 'todas'
@@ -163,9 +192,18 @@
     contentEl.className = 'grid';
     contentEl.innerHTML = filtrados.map(p => `
       <div class="prof-card">
-        <span class="cat-tag">${p.categoria || 'Serviço'}</span>
-        <h3>${escapeHtml(p.nome)}</h3>
+        <div class="card-top">
+          ${p.foto
+            ? `<img class="avatar" src="${escapeHtml(p.foto)}" alt="Foto de ${escapeHtml(p.nome)}" onerror="this.outerHTML='<div class=&quot;avatar-fallback&quot;>${iniciais(p.nome)}</div>'">`
+            : `<div class="avatar-fallback">${iniciais(p.nome)}</div>`
+          }
+          <div class="card-top-text">
+            <span class="cat-tag">${p.categoria || 'Serviço'}</span>
+            <h3>${escapeHtml(p.nome)}</h3>
+          </div>
+        </div>
         <span class="bairro">${escapeHtml(p.bairro)}</span>
+        ${starsHtml(p.avaliacao)}
         ${p.detalhe ? `<p class="detalhe">${escapeHtml(p.detalhe)}</p>` : ''}
         <a class="wpp-btn" target="_blank" href="${whatsappLink(p.whatsapp)}">Chamar no WhatsApp</a>
       </div>
