@@ -116,6 +116,28 @@
     font-family:'Inter';font-size:0.96rem;padding:12px 14px;border-radius:9px;border:1px solid rgba(255,255,255,0.18);
     background:rgba(255,255,255,0.06);color:#fff;
   }
+  .photo-input{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:8px;
+    align-items:center;
+  }
+  .photo-input input{min-width:0;}
+  .btn-icon{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:44px;
+    height:44px;
+    border-radius:9px;
+    border:1px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.12);
+    color:#fff;
+    cursor:pointer;
+  }
+  .btn-icon:hover{background:rgba(255,255,255,0.18);}
+  .btn-icon svg{width:20px;height:20px;fill:currentColor;}
+  .file-info{font-size:0.85rem;color:#CBD8DA;margin-top:6px;}
   .field input::placeholder, .field textarea::placeholder{color:#8FA0A2;}
   .field input:focus, .field select:focus, .field textarea:focus{
     outline:2px solid var(--mango);outline-offset:1px;
@@ -316,7 +338,7 @@
         </div>
 
         <div class="field">
-          <label for="bairro">Rua / bairro em Igarassu</label>
+          <label for="bairro">Rua / Bairro em Igarassu</label>
           <input type="text" id="bairro" name="bairro" placeholder="Ex: Centro, Ponte, Cruz de Rebouças..." required>
         </div>
 
@@ -327,7 +349,14 @@
 
         <div class="field" id="foto-field">
           <label for="foto">Foto de perfil (opcional)</label>
-          <input type="url" id="foto" name="foto" placeholder="Cole um link de foto sua (Google Drive, Instagram, etc.)">
+          <div class="photo-input">
+            <input type="text" id="foto" name="foto" placeholder="Cole um link de foto sua (Google Drive, Instagram, etc.)">
+            <button type="button" class="btn-icon" id="foto-picker-btn" title="Buscar foto no computador">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-1.1 0-2 .9-2 2H6.5c-.83 0-1.5.67-1.5 1.5V17c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V8.5c0-.83-.67-1.5-1.5-1.5H14c0-1.1-.9-2-2-2zm0 2h4.5c.28 0 .5.22.5.5V8H7v-.5c0-.28.22-.5.5-.5H12zm0 3.5c1.38 0 2.5 1.12 2.5 2.5S13.38 15.5 12 15.5 9.5 14.38 9.5 13 10.62 10.5 12 10.5z"/></svg>
+            </button>
+          </div>
+          <input type="file" id="foto-file" accept="image/*" style="display:none">
+          <span class="file-info" id="foto-file-info"></span>
         </div>
 
         <div class="submit-row">
@@ -353,6 +382,7 @@
   // ==========================
 
   let currentMode = 'profissional';
+  let selectedFotoData = '';
 
   function setMode(mode){
     currentMode = mode;
@@ -440,6 +470,31 @@
       submitBtn.disabled = false;
       submitBtn.textContent = currentMode === 'profissional' ? 'Enviar cadastro' : 'Enviar pedido';
     }
+  });
+
+  document.getElementById('foto-picker-btn').addEventListener('click', function(){
+    document.getElementById('foto-file').click();
+  });
+
+  document.getElementById('foto-file').addEventListener('change', function(){
+    const file = this.files[0];
+    const info = document.getElementById('foto-file-info');
+    const textInput = document.getElementById('foto');
+
+    if(!file){
+      selectedFotoData = '';
+      info.textContent = '';
+      return;
+    }
+
+    info.textContent = `Arquivo selecionado: ${file.name}`;
+    textInput.value = file.name;
+
+    const reader = new FileReader();
+    reader.onload = function(){
+      selectedFotoData = reader.result;
+    };
+    reader.readAsDataURL(file);
   });
 </script>
 
