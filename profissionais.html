@@ -79,12 +79,19 @@
   .prof-card .stars{font-size:0.9rem;color:var(--mango);letter-spacing:1px;}
   .prof-card .no-rating{font-size:0.8rem;color:var(--ink-soft);font-style:italic;}
   .prof-card p.detalhe{font-size:0.9rem;color:var(--ink-soft);flex-grow:1;}
+  .prof-card .actions{display:flex;flex-direction:column;gap:8px;}
   .prof-card .wpp-btn{
-    margin-top:6px;font-family:'Inter';font-weight:600;font-size:0.86rem;
+    font-family:'Inter';font-weight:600;font-size:0.86rem;
     background:var(--verde);color:#fff;border:none;padding:10px 14px;border-radius:8px;
     text-align:center;text-decoration:none;cursor:pointer;
   }
   .prof-card .wpp-btn:hover{filter:brightness(1.05);}
+  .prof-card .insta-btn{
+    font-family:'Inter';font-weight:600;font-size:0.86rem;
+    background:transparent;color:var(--azulejo-deep);border:1.5px solid var(--azulejo-deep);padding:9px 14px;border-radius:8px;
+    text-align:center;text-decoration:none;cursor:pointer;
+  }
+  .prof-card .insta-btn:hover{background:var(--azulejo-deep);color:#fff;}
 
   .empty, .loading, .error{
     padding:60px 20px;text-align:center;color:var(--ink-soft);
@@ -109,7 +116,7 @@
   <div class="wrap">
     <p class="eyebrow">Profissionais cadastrados · Igarassu, PE</p>
     <h1>Quem já tá pronto pra atender no seu bairro.</h1>
-    <p>Lista atualizada direto da planilha de cadastros. Toque em "Chamar no WhatsApp" pra falar direto com o profissional.</p>
+    <p>Lista atualizada direto da planilha de cadastros. Toque em "Chamar no WhatsApp" pra falar direto com o profissional, ou veja o Instagram pra conferir o trabalho antes.</p>
 
     <div class="filters" id="filters">
       <span class="filter-chip active" data-cat="todas">Todas</span>
@@ -144,6 +151,29 @@
     let digits = onlyDigits(numero);
     if(digits.length <= 11) digits = '55' + digits; // assume Brasil se não tiver DDI
     return 'https://wa.me/' + digits;
+  }
+
+  // Aceita o profissional colando de várias formas: @usuario, usuario,
+  // instagram.com/usuario ou o link completo com https://
+  function instagramLink(valor){
+    if(!valor) return '';
+    let texto = String(valor).trim();
+    if(!texto) return '';
+
+    // já é um link completo (http/https) -> usa direto
+    if(/^https?:\/\//i.test(texto)){
+      return texto;
+    }
+
+    // veio como "instagram.com/usuario" sem o protocolo
+    if(/^(www\.)?instagram\.com\//i.test(texto)){
+      return 'https://' + texto.replace(/^www\./i, '');
+    }
+
+    // veio como "@usuario" ou só "usuario"
+    const usuario = texto.replace(/^@/, '').split('/')[0].trim();
+    if(!usuario) return '';
+    return 'https://instagram.com/' + usuario;
   }
 
   function renderChips(categorias){
@@ -192,7 +222,9 @@
     }
 
     contentEl.className = 'grid';
-    contentEl.innerHTML = filtrados.map(p => `
+    contentEl.innerHTML = filtrados.map(p => {
+      const insta = instagramLink(p.instagram);
+      return `
       <div class="prof-card">
         <div class="card-top">
           ${p.foto
@@ -207,9 +239,13 @@
         <span class="bairro">${escapeHtml(p.bairro)}</span>
         ${starsHtml(p.avaliacao)}
         ${p.detalhe ? `<p class="detalhe">${escapeHtml(p.detalhe)}</p>` : ''}
-        <a class="wpp-btn" target="_blank" href="${whatsappLink(p.whatsapp)}">Chamar no WhatsApp</a>
+        <div class="actions">
+          <a class="wpp-btn" target="_blank" rel="noopener" href="${whatsappLink(p.whatsapp)}">Chamar no WhatsApp</a>
+          ${insta ? `<a class="insta-btn" target="_blank" rel="noopener" href="${escapeHtml(insta)}">Ver Instagram</a>` : ''}
+        </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
   }
 
   function escapeHtml(str){

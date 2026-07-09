@@ -95,6 +95,31 @@
     background:var(--card);border:1px solid var(--line);padding:9px 14px;border-radius:100px;color:var(--ink);
   }
 
+  /* PARTNERS / MAQUININHAS */
+  .partners-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .partner-card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    overflow:hidden;display:flex;flex-direction:column;
+  }
+  .partner-card .partner-img{
+    width:100%;aspect-ratio:16/10;background:var(--azulejo-deep);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .partner-card .partner-img img{width:100%;height:100%;object-fit:cover;display:block;}
+  .partner-card .partner-body{padding:20px 20px 22px;display:flex;flex-direction:column;gap:8px;flex-grow:1;}
+  .partner-card .partner-tag{
+    font-family:'IBM Plex Mono';font-size:0.7rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--telha);
+  }
+  .partner-card h3{font-size:1.1rem;}
+  .partner-card p{font-size:0.9rem;color:var(--ink-soft);flex-grow:1;}
+  .partner-card .btn-partner{
+    margin-top:6px;font-family:'Inter';font-weight:600;font-size:0.86rem;
+    background:var(--verde);color:#fff;border:none;padding:11px 14px;border-radius:8px;
+    text-align:center;text-decoration:none;cursor:pointer;display:inline-block;
+  }
+  .partner-card .btn-partner:hover{filter:brightness(1.05);}
+  .partners-note{font-size:0.8rem;color:var(--ink-soft);margin-top:18px;}
+
   /* FORM */
   .form-section{background:var(--azulejo-deep);color:#F1EFE6;border-radius:22px;padding:52px;margin:0 24px;}
   .form-section .wrap{max-width:760px;padding:0;}
@@ -116,33 +141,14 @@
     font-family:'Inter';font-size:0.96rem;padding:12px 14px;border-radius:9px;border:1px solid rgba(255,255,255,0.18);
     background:rgba(255,255,255,0.06);color:#fff;
   }
-  .photo-input{
-    display:grid;
-    grid-template-columns:1fr auto;
-    gap:8px;
-    align-items:center;
-  }
-  .photo-input input{min-width:0;}
-  .btn-icon{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:44px;
-    height:44px;
-    border-radius:9px;
-    border:1px solid rgba(255,255,255,0.18);
-    background:rgba(255,255,255,0.12);
-    color:#fff;
-    cursor:pointer;
-  }
-  .btn-icon:hover{background:rgba(255,255,255,0.18);}
-  .btn-icon svg{width:20px;height:20px;fill:currentColor;}
-  .file-info{font-size:0.85rem;color:#CBD8DA;margin-top:6px;}
   .field input::placeholder, .field textarea::placeholder{color:#8FA0A2;}
   .field input:focus, .field select:focus, .field textarea:focus{
     outline:2px solid var(--mango);outline-offset:1px;
   }
+  .field-help{font-size:0.8rem;color:#9FB0B2;margin-top:2px;}
+  .field-help a{color:var(--mango);text-decoration:underline;}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
   .submit-row{display:flex;align-items:center;gap:16px;margin-top:6px;}
   .btn-submit{background:var(--mango);color:#2B2115;box-shadow:0 6px 0 0 #A9782A;}
   .btn-submit:hover{box-shadow:0 4px 0 0 #A9782A;transform:translateY(2px);}
@@ -157,7 +163,9 @@
   @media (max-width:820px){
     .hero-grid{grid-template-columns:1fr;gap:32px;}
     .steps{grid-template-columns:1fr;}
+    .partners-grid{grid-template-columns:1fr;}
     .row2{grid-template-columns:1fr;}
+    .row3{grid-template-columns:1fr;}
     .form-section{padding:34px 22px;border-radius:16px;margin:0 12px;}
   }
 
@@ -294,6 +302,60 @@
   </div>
 </section>
 
+<section class="section" id="maquininhas">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Pra você que presta serviço</p>
+      <h2>Receba por cartão sem complicação.</h2>
+      <p style="margin-top:10px;color:var(--ink-soft);font-size:0.95rem;">
+        Se você é profissional cadastrado aqui, essas são maquininhas que recomendamos pra receber de forma rápida e sem enrolação. Compare e escolha a que combina com o seu negócio.
+      </p>
+    </div>
+
+    <div class="partners-grid">
+      <!-- CARD 1 — troque imagem, nome e link pelo seu parceiro real -->
+      <div class="partner-card">
+        <div class="partner-img">
+          <img src="..\bairro_conecta\img\ton.png" alt="Maquininha de cartão parceira 1" onerror="this.parentElement.innerHTML='<span style=&quot;color:#fff;font-family:IBM Plex Mono;font-size:0.75rem;&quot;>Imagem da maquininha</span>'">
+        </div>
+        <div class="partner-body">
+          <span class="partner-tag">Maquininha</span>
+          <h3>Nome do parceiro 1</h3>
+          <p>Breve descrição da oferta: taxa, prazo de recebimento ou vantagem principal.</p>
+          <a class="btn-partner" href="https://ton.com.br/catalogo/?referrer=22A4B3B4-7512-4265-B564-7DED716D357E&userAnticipation=0&utm_medium=invite_share&utm_source=revendedor" target="_blank" rel="noopener">Peça a sua</a>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="partner-card">
+        <div class="partner-img">
+          <img src="..\bairro_conecta\img\moderninha.png" alt="Maquininha de cartão parceira 2" onerror="this.parentElement.innerHTML='<span style=&quot;color:#fff;font-family:IBM Plex Mono;font-size:0.75rem;&quot;>Imagem da maquininha</span>'">
+        </div>
+        <div class="partner-body">
+          <span class="partner-tag">Maquininha</span>
+          <h3>Nome do parceiro 2</h3>
+          <p>Breve descrição da oferta: taxa, prazo de recebimento ou vantagem principal.</p>
+          <a class="btn-partner" href="https://pagbank.vc/indica-maquininhas-610d270d3" target="_blank" rel="noopener">Peça a sua</a>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="partner-card">
+        <div class="partner-img">
+          <img src="COLE_AQUI_O_LINK_DA_IMAGEM_3" alt="Maquininha de cartão parceira 3" onerror="this.parentElement.innerHTML='<span style=&quot;color:#fff;font-family:IBM Plex Mono;font-size:0.75rem;&quot;>Imagem da maquininha</span>'">
+        </div>
+        <div class="partner-body">
+          <span class="partner-tag">Maquininha</span>
+          <h3>Nome do parceiro 3</h3>
+          <p>Breve descrição da oferta: taxa, prazo de recebimento ou vantagem principal.</p>
+          <a class="btn-partner" href="COLE_AQUI_SEU_LINK_DE_PARCEIRO_3" target="_blank" rel="noopener">Peça a sua</a>
+        </div>
+      </div>
+    </div>
+    <p class="partners-note">Esta seção contém links de parceiros. Se você contratar através deles, o Aqui no Bairro pode receber uma comissão — sem custo adicional pra você.</p>
+  </div>
+</section>
+
 <section class="section" id="cadastro" style="padding-top:0;">
   <div class="form-section">
     <div class="wrap">
@@ -307,7 +369,7 @@
       </div>
 
       <form id="signup-form">
-        <div class="row2">
+        <div class="row3">
           <div class="field">
             <label for="nome">Nome</label>
             <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
@@ -315,6 +377,10 @@
           <div class="field">
             <label for="whatsapp">WhatsApp</label>
             <input type="tel" id="whatsapp" name="whatsapp" placeholder="(81) 9XXXX-XXXX" required>
+          </div>
+          <div class="field">
+            <label for="instagram">Instagram (opcional)</label>
+            <input type="text" id="instagram" name="instagram" placeholder="@seuusuario">
           </div>
         </div>
 
@@ -349,14 +415,8 @@
 
         <div class="field" id="foto-field">
           <label for="foto">Foto de perfil (opcional)</label>
-          <div class="photo-input">
-            <input type="text" id="foto" name="foto" placeholder="Cole um link de foto sua (Google Drive, Instagram, etc.)">
-            <button type="button" class="btn-icon" id="foto-picker-btn" title="Buscar foto no computador">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5c-1.1 0-2 .9-2 2H6.5c-.83 0-1.5.67-1.5 1.5V17c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V8.5c0-.83-.67-1.5-1.5-1.5H14c0-1.1-.9-2-2-2zm0 2h4.5c.28 0 .5.22.5.5V8H7v-.5c0-.28.22-.5.5-.5H12zm0 3.5c1.38 0 2.5 1.12 2.5 2.5S13.38 15.5 12 15.5 9.5 14.38 9.5 13 10.62 10.5 12 10.5z"/></svg>
-            </button>
-          </div>
-          <input type="file" id="foto-file" accept="image/*" style="display:none">
-          <span class="file-info" id="foto-file-info"></span>
+          <input type="text" id="foto" name="foto" placeholder="Cole aqui o link direto da sua foto">
+          <span class="field-help">Dica: suba a foto no <a href="https://postimages.org" target="_blank" rel="noopener">postimages.org</a> (grátis, sem cadastro) e cole aqui o link direto gerado.</span>
         </div>
 
         <div class="submit-row">
@@ -382,7 +442,6 @@
   // ==========================
 
   let currentMode = 'profissional';
-  let selectedFotoData = '';
 
   function setMode(mode){
     currentMode = mode;
@@ -431,6 +490,7 @@
       tipo: currentMode,
       nome: document.getElementById('nome').value.trim(),
       whatsapp: document.getElementById('whatsapp').value.trim(),
+      instagram: document.getElementById('instagram').value.trim(),
       categoria: document.getElementById('categoria').value,
       bairro: document.getElementById('bairro').value.trim(),
       detalhe: document.getElementById('detalhe').value.trim(),
@@ -470,31 +530,6 @@
       submitBtn.disabled = false;
       submitBtn.textContent = currentMode === 'profissional' ? 'Enviar cadastro' : 'Enviar pedido';
     }
-  });
-
-  document.getElementById('foto-picker-btn').addEventListener('click', function(){
-    document.getElementById('foto-file').click();
-  });
-
-  document.getElementById('foto-file').addEventListener('change', function(){
-    const file = this.files[0];
-    const info = document.getElementById('foto-file-info');
-    const textInput = document.getElementById('foto');
-
-    if(!file){
-      selectedFotoData = '';
-      info.textContent = '';
-      return;
-    }
-
-    info.textContent = `Arquivo selecionado: ${file.name}`;
-    textInput.value = file.name;
-
-    const reader = new FileReader();
-    reader.onload = function(){
-      selectedFotoData = reader.result;
-    };
-    reader.readAsDataURL(file);
   });
 </script>
 
